@@ -15,7 +15,7 @@ const { readFileSync } = require("fs");
 const { join } = require("path");
 
 const defaultOpts = {
-  marker: "worker"
+  marker: "comlink"
 };
 
 function generateLoaderModule(path) {
@@ -63,7 +63,7 @@ module.exports = function(opts = {}) {
       }
       if (!id.startsWith(prefix)) return;
 
-      const realId = id.slice(prefix.length) + "?worker";
+      const realId = id.slice(prefix.length) + suffix;
       const loader = generateLoaderModule(realId);
       return loader;
     }

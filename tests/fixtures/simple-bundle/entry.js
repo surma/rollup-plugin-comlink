@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-import workerAPI from "worker:./a.js";
+import workerAPI from "comlink:./a.js";
 
 (async function() {
   const v = await workerAPI.f();

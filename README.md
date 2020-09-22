@@ -1,25 +1,28 @@
-# rollup-plugin-off-main-thread
+# rollup-plugin-comlink
 
-Use Rollup with workers and ES6 modules _today_.
+Use workers seamlessly
 
 ```
-$ npm install --save @surma/rollup-plugin-off-main-thread
+$ npm install --save @surma/rollup-plugin-comlink
 ```
 
 Workers are JavaScript’s version of threads. [Workers are important to use][when workers] as the main thread is already overloaded, especially on slower or older devices.
 
-This plugin takes care of shimming module support in workers and allows you to use `new Worker()`.
-
-OMT is the result of merging loadz0r and workz0r.
+[`@surma/rollup-plugin-off-main-thread`][omt plugin] teaches Rollup about Workers. This plugin makes their use seamless using [Comlink].
 
 ## Usage
 
-I set up [a gist] to show a full setup with OMT.
+To avoid having to make new releases of this plugin with every release of [Comlink] or my [OMT plugin], both of these modules have been declared as peer dependencies. This means you will have to explicitely add them to your dependency list:
+
+```
+$ npm install --save @surma/rollup-plugin-comlink @surma/rollup-plugin-off-main-thread comlink
+```
 
 ### Config
 
 ```js
 // rollup.config.js
+import comlink from "@surma/rollup-plugin-comlink";
 import OMT from "@surma/rollup-plugin-off-main-thread";
 
 export default {
@@ -31,52 +34,40 @@ export default {
     // modules in workers.
     format: "amd"
   },
-  plugins: [OMT()]
+  plugins: [comlink(), OMT()]
 };
 ```
 
-### Auto bundling
-
-In your project's code:
+### Example
 
 ```js
-const worker = new Worker("./worker.js", { type: "module" });
+// worker.js
+export function doMath(a, b) {
+  return a + b;
+}
 ```
-
-This will just work.
-
-### Importing workers as URLs
-
-If your worker constructor doesn't match `workerRegexp` (see options below), you might find it easier to import the worker as a URL. In your project's code:
 
 ```js
-import workerURL from "omt:./worker.js";
-import paintWorkletURL from "omt:./paint-worklet.js";
+// main.js
 
-const worker = new Worker(workerURL, { name: "main-worker" });
-CSS.paintWorklet.addModule(paintWorkletURL);
+import workerAPI from "comlink:./worker.js";
+
+(async function() {
+  const result = await workerAPI.doMath(40, 2);
+  console.assert(result == 42);
+})();
 ```
 
-`./worker.js` and `./paint-worklet.js` will be added to the output as chunks.
-
-## Options
+### Options
 
 ```js
 {
   // ...
-  plugins: [OMT(options)];
+  plugins: [comlink(options), omt()];
 }
 ```
 
-- `loader`: A string containing the EJS template for the amd loader. If `undefined`, OMT will use `loader.ejs`.
-- `useEval`: Use `fetch()` + `eval()` to load dependencies instead of `<script>` tags and `importScripts()`. _This is not CSP compliant, but is required if you want to use dynamic imports in ServiceWorker_.
-- `workerRegexp`: A RegExp to find `new Workers()` calls. The second capture group _must_ capture the provided file name without the quotes.
-- `amdFunctionName`: Function name to use instead of AMD’s `define`.
-- `prependLoader`: A function that determines whether the loader code should be prepended to a certain chunk. Should return true if the load is suppsoed to be prepended.
-- `urlLoaderScheme`: Scheme to use when importing workers as URLs. If `undefined`, OMT will use `"omt"`.
-
-[when workers]: https://dassur.ma/things/when-workers
-[a gist]: https://gist.github.com/surma/a02db7b53eb3e7870bf539b906ff6ff6
+- `marker`: A string that is used as a prefix to mark a worker import. Default is `comlink`.
 
 ---
 
