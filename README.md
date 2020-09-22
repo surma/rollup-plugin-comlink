@@ -23,7 +23,7 @@ $ npm install --save @surma/rollup-plugin-comlink @surma/rollup-plugin-off-main-
 ```js
 // rollup.config.js
 import comlink from "@surma/rollup-plugin-comlink";
-import OMT from "@surma/rollup-plugin-off-main-thread";
+import omt from "@surma/rollup-plugin-off-main-thread";
 
 export default {
   input: ["src/main.js"],
@@ -34,7 +34,7 @@ export default {
     // modules in workers.
     format: "amd"
   },
-  plugins: [comlink(), OMT()]
+  plugins: [comlink(), omt()]
 };
 ```
 
