@@ -72,3 +72,7 @@ import workerAPI from "comlink:./worker.js";
 ---
 
 License Apache-2.0
+
+[when workers]: https://surma.dev/things/when-workers
+[comlink]: https://github.com/GoogleChromeLabs/comlink
+[omt plugin]: https://github.com/surma/rollup-plugin-off-main-thread
