@@ -18,7 +18,7 @@ const defaultOpts = {
   marker: "worker"
 };
 
-function generateLoaderModule(path, prefix) {
+function generateLoaderModule(path) {
   return `
 		import workerPath from "omt:${path}";
 		import {wrap} from "comlink";
