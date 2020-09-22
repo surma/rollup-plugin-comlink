@@ -1,6 +1,7 @@
 {
   "name": "@surma/rollup-plugin-comlink",
   "version": "0.1.0",
+  "private": false,
   "description": "Use workers seamlessly",
   "main": "index.js",
   "scripts": {
