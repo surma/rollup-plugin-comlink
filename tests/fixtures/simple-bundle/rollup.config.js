@@ -16,9 +16,9 @@ const comlink = require("../../../");
 const resolve = require("@rollup/plugin-node-resolve").nodeResolve;
 
 module.exports = {
-  input: "./tests/fixtures/simple-bundle/entry.js",
+  input: `${__dirname}/entry.js`,
   output: {
-    dir: "./tests/fixtures/simple-bundle/build",
+    dir: `${__dirname}/build`,
     format: "amd"
   },
   plugins: [resolve(), comlink(), omt()]

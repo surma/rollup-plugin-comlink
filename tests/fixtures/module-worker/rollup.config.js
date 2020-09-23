@@ -11,9 +11,15 @@
  * limitations under the License.
  */
 
-import workerAPI from "comlink:./a.js";
+const omt = require("@surma/rollup-plugin-off-main-thread");
+const comlink = require("../../../");
+const resolve = require("@rollup/plugin-node-resolve").nodeResolve;
 
-(async function() {
-  const v = await workerAPI.f();
-  window.parent.postMessage(v);
-})();
+module.exports = {
+  input: `${__dirname}/entry.js`,
+  output: {
+    dir: `${__dirname}/build`,
+    format: "esm"
+  },
+  plugins: [resolve(), comlink({ useModuleWorker: true }), omt()]
+};

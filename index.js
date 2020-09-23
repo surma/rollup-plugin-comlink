@@ -15,15 +15,18 @@ const { readFileSync } = require("fs");
 const { join } = require("path");
 
 const defaultOpts = {
-  marker: "comlink"
+  marker: "comlink",
+  useModuleWorker: false
 };
 
-function generateLoaderModule(path) {
+function generateLoaderModule(path, { useModuleWorker = false } = {}) {
   return `
 		import workerPath from "omt:${path}";
 		import {wrap} from "comlink";
 
-		export default wrap(new Worker(workerPath));
+		export default wrap(new Worker(workerPath${
+      useModuleWorker ? `, {type: "module"}` : ""
+    }));
 	`;
 }
 
@@ -56,6 +59,27 @@ module.exports = function(opts = {}) {
       return prefix + newId;
     },
 
+    outputOptions({ format }) {
+      if ((format === "esm" || format === "es") && !opts.useModuleWorker) {
+        this.error(
+          `Can only use {format: "${format}"} with {useModuleWorker: true}`
+        );
+        return;
+      }
+      if (format === "amd" && opts.useModuleWorker) {
+        this.error(
+          `Can only use {useModuleWorker: true} with {format: "${format}"}`
+        );
+        return;
+      }
+      if (format !== "amd" && format !== "esm" && format != "es") {
+        this.error(
+          "Output format MUST be `amd`. `esm` is also allowed, but has very little browser support."
+        );
+        return;
+      }
+    },
+
     load(id) {
       if (id.endsWith(suffix) && !id.startsWith("omt:")) {
         const wrapper = generateWorkerWrapper(id.slice(0, -suffix.length));
@@ -64,7 +88,7 @@ module.exports = function(opts = {}) {
       if (!id.startsWith(prefix)) return;
 
       const realId = id.slice(prefix.length) + suffix;
-      const loader = generateLoaderModule(realId);
+      const loader = generateLoaderModule(realId, opts);
       return loader;
     }
   };

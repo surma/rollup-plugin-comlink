@@ -14,6 +14,8 @@
 import workerAPI from "comlink:./a.js";
 
 (async function() {
+  console.log({ workerAPI });
   const v = await workerAPI.f();
+  console.log({ v });
   window.parent.postMessage(v);
 })();
