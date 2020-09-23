@@ -69,6 +69,36 @@ import workerAPI from "comlink:./worker.js";
 
 - `marker`: A string that is used as a prefix to mark a worker import. Default is `comlink`.
 
+## TypeScript
+
+TypeScript can be taught to handle these pseudo-imports correctly and forward the types appropriately.
+
+```ts
+// main.ts
+import workerAPI from "comlink:./worker.js";
+
+console.log(await workerAPI.sayHello("surma"));
+// This would fail to compile:
+// console.log(await workerAPI.doesNotExit("surma"));
+```
+
+```ts
+// worker.ts
+export function sayHello(name: string): string {
+  return `Hello ${name}!`;
+}
+```
+
+```ts
+// worker-modules.d.ts
+declare module "comlink:./worker.js" {
+  // Do *not* move this to a top-level import, as it will turn this
+  // .d.ts file from an ambient module into a local module.
+  const wrap: import("comlink").Remote<typeof import("./worker.js")>;
+  export default wrap;
+}
+```
+
 ---
 
 License Apache-2.0
