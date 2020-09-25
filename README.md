@@ -2,10 +2,6 @@
 
 Use workers seamlessly
 
-```
-$ npm install --save @surma/rollup-plugin-comlink
-```
-
 Workers are JavaScript’s version of threads. [Workers are important to use][when workers] as the main thread is already overloaded, especially on slower or older devices.
 
 [`@surma/rollup-plugin-off-main-thread`][omt plugin] teaches Rollup about Workers. This plugin makes their use seamless using [Comlink].
@@ -32,9 +28,9 @@ export default {
     // You _must_ use either “amd” or “esm” as your format.
     // But note that only very few browsers have native support for
     // modules in workers.
-    format: "amd"
+    format: "amd",
   },
-  plugins: [comlink(), omt()]
+  plugins: [comlink(), omt()],
 };
 ```
 
@@ -47,12 +43,14 @@ export function doMath(a, b) {
 }
 ```
 
+> **Note:** Importing individual exports currently does _not_ work. `comlink:` modules only have one default export.
+
 ```js
 // main.js
 
 import workerAPI from "comlink:./worker.js";
 
-(async function() {
+(async function () {
   const result = await workerAPI.doMath(40, 2);
   console.assert(result == 42);
 })();
