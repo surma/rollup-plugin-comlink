@@ -11,9 +11,6 @@
  * limitations under the License.
  */
 
-import workerAPI from "comlink:./a.js";
-
-(async function() {
-  const v = await workerAPI.f();
-  window.parent.postMessage(v);
-})();
+export function f() {
+  return "a";
+}

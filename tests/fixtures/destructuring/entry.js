@@ -13,7 +13,8 @@
 
 import workerAPI from "comlink:./a.js";
 
-(async function() {
-  const v = await workerAPI.f();
+(async function () {
+  const { f } = workerAPI;
+  const v = await f();
   window.parent.postMessage(v);
 })();

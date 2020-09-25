@@ -32,7 +32,8 @@ async function init() {
   await Promise.all(
     [
       "./tests/fixtures/simple-bundle/entry.js",
-      "./tests/fixtures/module-worker/entry.js"
+      "./tests/fixtures/module-worker/entry.js",
+      "./tests/fixtures/destructuring/entry.js"
     ].map(async input => {
       const pathName = path.dirname(input);
       const outputOptions = {
