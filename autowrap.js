@@ -14,6 +14,7 @@ async function autoWrap({ code, ast, shouldAutoWrap, prefix }) {
 
   const refToProp = new Map();
 
+  let dirty = false;
   for (const node of ast.body) {
     // FIXME: currently we don't handle export from statement
     if (
@@ -37,10 +38,11 @@ async function autoWrap({ code, ast, shouldAutoWrap, prefix }) {
           `${prefix}${node.source.value}`
         )}`
       );
+      dirty = true;
     }
   }
 
-  if (!refToProp.size) return;
+  if (!dirty) return;
 
   let scope = attachScopes(ast, "scope");
 
