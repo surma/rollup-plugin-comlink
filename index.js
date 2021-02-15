@@ -63,7 +63,13 @@ module.exports = function (opts = {}) {
     },
 
     transform(code, id) {
-      if (id.endsWith(suffix) || id.startsWith("\0")) return;
+      if (
+        id.endsWith(suffix) ||
+        id.startsWith(prefix) ||
+        id.startsWith("omt:") ||
+        id.startsWith("\0")
+      )
+        return;
       const ast = this.parse(code);
       return autoWrap({
         code,
