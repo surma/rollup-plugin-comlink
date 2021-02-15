@@ -21,9 +21,11 @@ async function autoWrap({ code, ast, shouldAutoWrap, prefix }) {
       node.type === "ImportDeclaration" &&
       (await shouldAutoWrap(node.source.value))
     ) {
-      const workerName =
-        node.specifiers.find((s) => s.type === "ImportNamespaceSpecifier")
-          ?.local.name || generateWorkerName();
+      const ns = node.specifiers.find(
+        (s) => s.type === "ImportNamespaceSpecifier"
+      );
+      const workerName = ns ? ns.local.name : generateWorkerName();
+
       for (const spec of node.specifiers) {
         if (spec.type === "ImportDefaultSpecifier") {
           refToProp.set(spec.local.name, `${workerName}.default`);
