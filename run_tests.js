@@ -33,12 +33,13 @@ async function init() {
     [
       "./tests/fixtures/simple-bundle/entry.js",
       "./tests/fixtures/module-worker/entry.js",
-      "./tests/fixtures/destructuring/entry.js"
-    ].map(async input => {
+      "./tests/fixtures/destructuring/entry.js",
+      "./tests/fixtures/auto-wrap/entry.js",
+    ].map(async (input) => {
       const pathName = path.dirname(input);
       const outputOptions = {
         dir: path.join(pathName, "build"),
-        format: "es"
+        format: "es",
       };
       const rollupConfigPath = "./" + path.join(pathName, "rollup.config.js");
       let rollupConfig = require(rollupConfigPath);
@@ -51,9 +52,9 @@ async function init() {
   myKarmaConfig({
     set(config) {
       Object.assign(karmaConfig, config);
-    }
+    },
   });
-  const server = new karma.Server(karmaConfig, code => {
+  const server = new karma.Server(karmaConfig, (code) => {
     console.log(`Karma exited with code ${code}`);
     process.exit(code);
   });
