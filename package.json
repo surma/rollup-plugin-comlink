@@ -31,7 +31,6 @@
     "type": "git",
     "url": "https://github.com/surma/rollup-plugin-comlink"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@surma/rollup-plugin-off-main-thread": ">=1",
     "comlink": ">=4"

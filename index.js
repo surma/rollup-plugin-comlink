@@ -16,12 +16,12 @@ const { join } = require("path");
 
 const defaultOpts = {
   marker: "comlink",
-  useModuleWorker: false
+  useModuleWorker: false,
 };
 
 function generateLoaderModule(path, { useModuleWorker = false } = {}) {
   return `
-		import workerPath from "omt:${path}";
+		import workerPath from ${JSON.stringify(`omt:${path}`)};
 		import {wrap} from "comlink";
 
 		export default wrap(new Worker(workerPath${
@@ -32,14 +32,14 @@ function generateLoaderModule(path, { useModuleWorker = false } = {}) {
 
 function generateWorkerWrapper(path) {
   return `
-		import * as m from "${path}";
+		import * as m from ${JSON.stringify(path)};
 		import {expose} from "comlink";
 
 		expose(m);
 	`;
 }
 
-module.exports = function(opts = {}) {
+module.exports = function (opts = {}) {
   opts = Object.assign({}, defaultOpts, opts);
 
   const prefix = opts.marker + ":";
@@ -90,6 +90,6 @@ module.exports = function(opts = {}) {
       const realId = id.slice(prefix.length) + suffix;
       const loader = generateLoaderModule(realId, opts);
       return loader;
-    }
+    },
   };
 };
