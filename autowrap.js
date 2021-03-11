@@ -60,7 +60,11 @@ async function autoWrap({ code, ast, shouldAutoWrap, prefix }) {
         isReference(node, parent) &&
         !scope.contains(node.name)
       ) {
-        code.overwrite(node.start, node.end, refToProp.get(node.name));
+        if (parent.type === "Property" && parent.shorthand) {
+          code.appendLeft(node.end, `: ${refToProp.get(node.name)}`);
+        } else {
+          code.overwrite(node.start, node.end, refToProp.get(node.name));
+        }
       }
     },
     leave(node) {

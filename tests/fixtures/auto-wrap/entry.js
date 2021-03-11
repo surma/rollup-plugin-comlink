@@ -14,6 +14,7 @@
 import { f } from "./a.js";
 
 (async function () {
-  const v = await f();
+  const a = { f };
+  const v = await a.f();
   window.parent.postMessage(v);
 })();
