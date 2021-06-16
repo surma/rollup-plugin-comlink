@@ -24,8 +24,7 @@ function generateLoaderModule(path, { useModuleWorker = false } = {}) {
 		import workerPath from ${JSON.stringify(`omt:${path}`)};
 		import {wrap} from "comlink";
 
-		const currentImportPath = (new URL(import.meta.url).pathname.match(/(^\\/.+)*\\//g) || [""])[0];
-		export default wrap(new Worker(currentImportPath + workerPath${
+		export default wrap(new Worker(new URL(workerPath, import.meta.url)${
       useModuleWorker ? `, {type: "module"}` : ""
     }));
 	`;
