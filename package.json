@@ -11,7 +11,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^9.0.0",
-    "@surma/rollup-plugin-off-main-thread": "^1.4.1",
+    "@surma/rollup-plugin-off-main-thread": "2.2.2",
     "chai": "4.2.0",
     "comlink": "^4.3.0",
     "husky": "^4.3.0",
@@ -32,7 +32,7 @@
     "url": "https://github.com/surma/rollup-plugin-comlink"
   },
   "peerDependencies": {
-    "@surma/rollup-plugin-off-main-thread": ">=1",
+    "@surma/rollup-plugin-off-main-thread": ">=2",
     "comlink": ">=4"
   },
   "husky": {
