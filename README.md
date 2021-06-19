@@ -67,6 +67,7 @@ import workerAPI from "comlink:./worker.js";
 
 - `marker`: A string that is used as a prefix to mark a worker import. Default is `comlink`.
 - `useModuleWorkers`: Use module workers (requires `{format: "esm"}`).
+- `autoWrap`: A list of regex. Modules whose id matches the regex will be wrapped by comlink automatically.
 
 ## TypeScript
 

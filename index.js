@@ -14,9 +14,12 @@
 const { readFileSync } = require("fs");
 const { join } = require("path");
 
+const { autoWrap } = require("./autowrap");
+
 const defaultOpts = {
   marker: "comlink",
   useModuleWorker: false,
+  autoWrap: [],
 };
 
 function generateLoaderModule(path, { useModuleWorker = false } = {}) {
@@ -57,6 +60,28 @@ module.exports = function (opts = {}) {
       if (!newId) throw Error(`Cannot find module '${path}'`);
 
       return prefix + newId;
+    },
+
+    transform(code, id) {
+      if (
+        id.endsWith(suffix) ||
+        id.startsWith(prefix) ||
+        id.startsWith("omt:") ||
+        id.startsWith("\0")
+      )
+        return;
+      const ast = this.parse(code);
+      return autoWrap({
+        code,
+        ast,
+        prefix,
+        shouldAutoWrap: async (importee) => {
+          const result = await this.resolve(importee, id);
+          return (
+            result && result.id && opts.autoWrap.some((r) => r.test(result.id))
+          );
+        },
+      });
     },
 
     outputOptions({ format }) {
