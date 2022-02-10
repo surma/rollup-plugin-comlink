@@ -16,7 +16,7 @@ const { join } = require("path");
 
 const defaultOpts = {
   marker: "comlink",
-  useModuleWorker: false,
+  useModuleWorker: undefined,
 };
 
 function generateLoaderModule(path, { useModuleWorker = false } = {}) {
@@ -60,9 +60,12 @@ module.exports = function (opts = {}) {
     },
 
     outputOptions({ format }) {
-      if ((format === "esm" || format === "es") && !opts.useModuleWorker) {
+      if (
+        (format === "esm" || format === "es") &&
+        opts.useModuleWorker == undefined
+      ) {
         this.error(
-          `Can only use {format: "${format}"} with {useModuleWorker: true}`
+          `You should use {format: "${format}"} with {useModuleWorker: true}. Suppress this error with {useModuleWorker: false}.`
         );
         return;
       }
