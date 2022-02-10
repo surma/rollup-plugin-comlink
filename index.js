@@ -16,6 +16,7 @@ const { join } = require("path");
 
 const defaultOpts = {
   marker: "comlink",
+  useModuleWorker: undefined,
 };
 
 function generateLoaderModule(path, { useModuleWorker = false } = {}) {
